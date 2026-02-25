@@ -1,26 +1,31 @@
 package main
 
-import "math"
+import (
+	"math"
+	"sort"
+)
 
 func threeSumClosest(nums []int, target int) int {
-    r := 0
-    d := math.MaxInt
-    for i := 0; i < len(nums); i++ {
-        for j := i+1; j < len(nums); j++ {
-            for k := j+1; k < len(nums); k++ {
-                t := nums[i] + nums[j] + nums[k] 
-                if t == target {
-                    return t
-                }
-                td := abs(t-target)
-                if td < d {
-                    r = t
-                    d = td
-                }
-            }
-        }
-    }
-    return r
+	sort.Ints(nums)
+	n := len(nums)
+	closest := nums[0] + nums[1] + nums[2]
+	for i := 0; i < n-2; i++ {
+		left, right := i+1, n-1
+		for left < right {
+			sum := nums[i] + nums[left] + nums[right]
+			if abs(sum-target) < abs(closest-target) {
+				closest = sum
+			}
+			if sum == target {
+				return sum
+			} else if sum < target {
+				left++
+			} else {
+				right--
+			}
+		}
+	}
+	return closest
 }
 
 func abs(x int) int {
